@@ -60,3 +60,24 @@ print(vetor_A)
 
 vetor_B = LinearAlgebra.transpose(vetor_A)
 print(vetor_B)
+
+print('\nTeste de soma de matrizes: ')
+matriz_A = matrix.Matrix(3, 2, [1,2,3,4,5,6])
+matriz_B = matrix.Matrix(3, 2, [2,3,4,5,6,7])
+
+print(LinearAlgebra.sum(matriz_A, matriz_B))
+
+print('\nTeste de soma de vetores linha: ')
+vetor_A = vector.Vector(3, [1,2,3])
+vetor_B = vector.Vector(3, [2,3,4])
+
+print(LinearAlgebra.sum(vetor_A, vetor_B))
+
+print('\nTeste de soma de vetores coluna: ')
+vetor_A = vector.Vector(3, [1,2,3])
+vetor_B = vector.Vector(3, [2,3,4])
+
+vetor_A = LinearAlgebra.transpose(vetor_A)
+vetor_B = LinearAlgebra.transpose(vetor_B)
+
+print(LinearAlgebra.sum(vetor_A, vetor_B))
