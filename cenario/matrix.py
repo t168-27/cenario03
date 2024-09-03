@@ -9,6 +9,8 @@ TO DO
 ----------------------------
 
 """
+def _get_element_index(row: int, col: int, n_cols: int) -> int:
+    return ((row-1) * n_cols) + (col-1)
 
 class Matrix:
     def __init__(self, rows: int, cols: int, elements):
@@ -46,15 +48,14 @@ class Matrix:
         self.rows = rows
         self.cols = cols
         self.elements = elements
-
-
-    def _get_element_index(self, row: int, col: int) -> int:
-        return ((row-1) * self.cols) + (col-1)
+    
+    def __repr__(self) -> str:
+        return '[' + '\n '.join([repr(self.elements[((line-1) * self.cols):(self.cols * line)]) for line in range(1, self.rows + 1)]) + ']'
 
     
     def get(self, i: int, j: int) -> int:
-        return self.elements[self._get_element_index(i, j)]
+        return self.elements[_get_element_index(i, j, self.cols)]
 
     
     def set(self, i: int, j: int, value):
-        self.elements[self._get_element_index(i, j)] = value
+        self.elements[_get_element_index(i, j, self.cols)] = value
