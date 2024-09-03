@@ -39,9 +39,14 @@ class Vector:
     def __init__(self, dim: int, elements: [int]):
             self.dim = dim
             self.elements = elements
-    
+
+            # considerando o vetor inicial sempre como uma matriz linha
+            self.rows = 1
+            self.cols = len(elements)
+
     def __repr__(self) -> str:
-            return repr(self.elements)
+            # return repr(self.elements)
+            return '[' + '\n '.join([repr(self.elements[((line-1) * self.cols):(self.cols * line)]) for line in range(1, self.rows + 1)]) + ']'
 
     def get(self, i: int) -> int:
         return self.elements[i-1]

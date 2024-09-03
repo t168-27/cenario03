@@ -1,8 +1,8 @@
 from cenario import matrix, vector, LinearAlgebra
 
+print("\nTeste de transposta de matriz quadrada:")
 matriz_A = matrix.Matrix(3,3,[11, 12, 13, 21, 22, 23, 31, 32, 33])
 print(matriz_A)
-
 matriz_B = LinearAlgebra.transpose(matriz_A)
 print(matriz_B)
 
@@ -46,6 +46,17 @@ print(matriz_B)
 # print(vector_a.get(2))
 # print(vector_a.get(3))
 
-matriz_vector = matrix.Matrix(3,1, [1,2,3])
+print("\nTeste de transposta de matriz não quadrada:")
+matriz_C = matrix.Matrix(3, 2, [1,2,3,4,5,6])
+print(matriz_C)
 
-print(matriz_vector.get(2,1))
+matriz_D = LinearAlgebra.transpose(matriz_C)
+print(matriz_D)
+
+
+print("\nTeste de transposta de vetor:")
+vetor_A = vector.Vector(3, [1,2,3])
+print(vetor_A)
+
+vetor_B = LinearAlgebra.transpose(vetor_A)
+print(vetor_B)
