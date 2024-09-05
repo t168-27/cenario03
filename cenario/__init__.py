@@ -36,6 +36,7 @@ class LinearAlgebra:
     """
     def _replace_rows(self, matrix_lines: [list], row1_index: int, row2_index: int) -> [list]:
         """Operacao elementar de troca de linhas."""
+        print(f"Trocando linha {row1_index +1 } com linha {row2_index +1}")
         row1 = matrix_lines[row1_index]
         row2 = matrix_lines[row2_index]
         
@@ -45,6 +46,7 @@ class LinearAlgebra:
         return matrix_lines
 
     def _multiply_row(self, matrix_lines: [list], row_index: int, scalar) -> [list]:
+        print(f"Multiplicando linha {row_index +1 } por {scalar}")
         row = matrix_lines[row_index]
 
         new_row = list(map(lambda element: element * scalar, row))
@@ -112,7 +114,6 @@ class LinearAlgebra:
         m = _matrix_to_lines(a)
         pivot_row = 0
         pivot_col = 0
-        has_not_zero_row = False
 
         def zero_below_pivot(matrix, pivot_row: int, j: int):
             for i in range(pivot_row + 1, len(matrix)): # enumerate(m[pivot_row:]):
@@ -122,30 +123,82 @@ class LinearAlgebra:
             
             return new_matrix
 
-        for _ in range(0, a.cols - 1):
+        for ii in range(0, a.rows - 1):
+            print("iniciand linha "+ str(ii))
+            no_process = False
             # checa se o pivo já tem valor 1
             if m[pivot_row][pivot_col] == 1:
-                continue
+                no_process = True
 
-            # checa se existe valor 1 na coluna
-            for i in range(pivot_row, len(m)):
-            # for current_row_index, current_row in enumerate(m[pivot_row:]):
-                if m[i][pivot_col] == 1:
-                    m = self._replace_rows(m, pivot_row, i)
-                    print(m)
-                    m = zero_below_pivot(m, pivot_row, pivot_col)
-                    print(m)
+            if not no_process:
+                pivot_col_elements = [row[pivot_col] for row in m[pivot_row:]]
+                print(pivot_col_elements)
 
-                    continue
+            if 1 in pivot_col_elements:
+                m = self._replace_rows(m, pivot_row, pivot_col_elements.index(1) + pivot_row)
+                print(m)
+                m = zero_below_pivot(m, pivot_row, pivot_col)
+                print(m)
+            
+            elif any(pivot_col_elements):
+                for e in pivot_col_elements:
+                    if e != 0:
+                        i = pivot_col_elements.index(e) + pivot_row
+                        m  = self._multiply_row(m, i, (1 / e))
+                        print(m)
+                        m = self._replace_rows(m, pivot_row, i)
+                        print(m)
+                        m = zero_below_pivot(m, pivot_row, pivot_col)
+                        break
+                
+            pivot_row += 1
+            pivot_col += 1
+
+        m = self._multiply_row(m, pivot_row, (1 / m[pivot_row][pivot_col]))
+        
+        return Matrix(a.rows, a.cols, [e for l in m for e in l])
+
+            #     for i in range(pivot_row, len(m)):
+            #         if m[i][pivot_col] == 1:
+            #             has_unit_pivot = True
+            #             unit_pivot = i
+            #             continue
+                    
+            #         elif 
+            
+            # if not no_process and not has_unit_pivot:
+            #     for i in range(pivot_row, len(m)):
+            #         if m[i][pivot_col] != 0:
+            #             has_not_zero_pivot = True
+            #             not_zero_pivot
+
+
+            # # checa se existe valor 1 na coluna
+            # for i in range(pivot_row, len(m)):
+            # # for current_row_index, current_row in enumerate(m[pivot_row:]):
+            #     if m[i][pivot_col] == 1:
+            #         m = self._replace_rows(m, pivot_row, i)
+            #         print(m)
+            #         m = zero_below_pivot(m, pivot_row, pivot_col)
+            #         print(m)
+
+            #         finished = True
+            #         continue
                                 
+            # if finished: 
+            #     pivot_row += 1
+            #     pivot_col += 1
+            #     continue
 
-            # checa se na coluna atual existe valor diferente de zero
-            for i in range(pivot_row, len(m)):
-                if m[i][pivot_col] != 0:
-                    m = self._replace_rows(m, pivot_row, i)
-                    print(m)
-                    # transformar pivot em 1
-                    m = zero_below_pivot(m, pivot_row, pivot_col)
+            # # checa se na coluna atual existe valor diferente de zero
+            # for i in range(pivot_row, len(m)):
+            #     if m[i][pivot_col] != 0:
+            #         m  = self._multiply_row(m, i, (1 / m[i][pivot_col]))
+            #         print(m)
+            #         m = self._replace_rows(m, pivot_row, i)
+            #         print(m)
+            #         # transformar pivot em 1
+            #         m = zero_below_pivot(m, pivot_row, pivot_col)
 
                 
                 
@@ -167,11 +220,11 @@ class LinearAlgebra:
 
             
             # termina operacao se a coluna só tem valores igual a zero
+            # if no_process:
+            #     pivot_row += 1
+            #     pivot_col += 1
             
-            pivot_row += 1
-            pivot_col += 1
-        
-        return m
+        # return pivot_col_elements
         # print(type(m))
 
         # for row in m:
