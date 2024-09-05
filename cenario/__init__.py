@@ -96,3 +96,41 @@ class LinearAlgebra:
             return c
         
         raise TypeError(f'sum espera argumentos de mesmo tipo mas recebeu {type(a)} e {type(b)}')
+
+
+    def gauss(a):
+        m = _matrix_to_lines(a)
+        pivot_row = 0
+        pivot_col = 0
+
+        def normalize_col(a: Matrix, col):
+            """ Transforma o elemento do pivo em 1 se possivel
+            """
+            new_a = deepcopy(a)
+            has_not_zero_row = False
+
+            if m[pivot_row][0] == 1:
+                pivot_row += 1
+                return new_m
+        
+            for current_row in m[pivot_row:]:
+                if m[current_row][pivot_col] != 0:
+                    has_not_zero_row = True
+                    break
+            
+            if has_not_zero_row == False:
+                return new_m
+
+            # for current_row in m[pivot_row:]:
+            #     if m[current_row][pivot_col] == 1:
+
+
+        # for row in m:
+
+        # 1 - Testar se 1,1 é igual a 1, se sim ir para passo 6
+        # 2 - Testar se 1,1 a 1,n tem algum elemento dif de zero, se não ir para passo 7
+        # 3 - Buscar 1 entre 1,1 a 1,n
+        # 4 - Buscar outro valor entre 1,1 a 1,n
+        # 5 - Tornar valor diferente de 1 em 1
+        # 6 - Zerar valores em 2,1 a 2,n
+        # 7 - Repete 1 a 6 com póxima coluna e linha
