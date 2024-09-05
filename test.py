@@ -86,9 +86,10 @@ from cenario import matrix, vector, LinearAlgebra, _matrix_to_lines
 matriz_A = matrix.Matrix(3,4,[0, -2, 3, 1, 3, 6, -3, -2, 6, 6, 3, 5])
 # print(LinearAlgebra.gauss(matriz_A))
 
-matriz_resposta = matrix.Matrix(3,4,[1, 2, -1, -(2/3), 0, 1, -(3/2), -(1/2), 0, 0, 0, 1])
+# matriz_resposta = matrix.Matrix(3,4,[1, 2, -1, -(2/3), 0, 1, -(3/2), -(1/2), 0, 0, 0, 1])
 
 print(_matrix_to_lines(matriz_A))
 
-print(LinearAlgebra._replace_row(_matrix_to_lines(matriz_A), 0, 1))
-print(LinearAlgebra._multiply_row(_matrix_to_lines(matriz_A), 0, 3))
+# print(LinearAlgebra._replace_rows(_matrix_to_lines(matriz_A), 0, 1))
+# print(LinearAlgebra._multiply_row(_matrix_to_lines(matriz_A), 0, 3))
+print(LinearAlgebra._add_rows(_matrix_to_lines(matriz_A), 0, 1))

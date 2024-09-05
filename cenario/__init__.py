@@ -34,7 +34,7 @@ class LinearAlgebra:
     TO DO
 
     """
-    def _replace_row(matrix_lines: [list], row1_index, row2_index) -> [list]:
+    def _replace_rows(matrix_lines: [list], row1_index: int, row2_index: int) -> [list]:
         """Operacao elementar de troca de linhas."""
         row1 = matrix_lines[row1_index]
         row2 = matrix_lines[row2_index]
@@ -44,12 +44,22 @@ class LinearAlgebra:
 
         return matrix_lines
 
-    def _multiply_row(matrix_lines: [list], row_index, scalar) -> [list]:
+    def _multiply_row(matrix_lines: [list], row_index: int, scalar) -> [list]:
         row = matrix_lines[row_index]
 
         new_row = list(map(lambda element: element * scalar, row))
 
         matrix_lines[row_index] = new_row
+
+        return matrix_lines
+
+    def _add_rows(matrix_lines: [list], row1_index: int, row2_index: int) -> [list]:
+        row1 = matrix_lines[row1_index]
+        row2 = matrix_lines[row2_index]
+
+        new_row = [x + y for x, y in zip(row1, row2)]
+
+        matrix_lines[row1_index] = new_row
 
         return matrix_lines
 
