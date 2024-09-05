@@ -34,7 +34,7 @@ class LinearAlgebra:
     TO DO
 
     """
-    def _replace_rows(matrix_lines: [list], row1_index: int, row2_index: int) -> [list]:
+    def _replace_rows(self, matrix_lines: [list], row1_index: int, row2_index: int) -> [list]:
         """Operacao elementar de troca de linhas."""
         row1 = matrix_lines[row1_index]
         row2 = matrix_lines[row2_index]
@@ -44,7 +44,7 @@ class LinearAlgebra:
 
         return matrix_lines
 
-    def _multiply_row(matrix_lines: [list], row_index: int, scalar) -> [list]:
+    def _multiply_row(self, matrix_lines: [list], row_index: int, scalar) -> [list]:
         row = matrix_lines[row_index]
 
         new_row = list(map(lambda element: element * scalar, row))
@@ -53,17 +53,17 @@ class LinearAlgebra:
 
         return matrix_lines
 
-    def _add_rows(matrix_lines: [list], row1_index: int, row2_index: int) -> [list]:
+    def _add_rows(self, matrix_lines: [list], row1_index: int, row2_index: int, scalar = 1) -> [list]:
         row1 = matrix_lines[row1_index]
         row2 = matrix_lines[row2_index]
 
-        new_row = [x + y for x, y in zip(row1, row2)]
+        new_row = [x + y for x, y in zip(row1, list(map(lambda element: element * scalar, row2)))]
 
         matrix_lines[row1_index] = new_row
 
         return matrix_lines
 
-    def transpose(a):
+    def transpose(self, a):
         new_a = deepcopy(a)
 
         if isinstance(a, Matrix):
@@ -82,7 +82,7 @@ class LinearAlgebra:
             
             return new_a
 
-    def sum(a, b):
+    def sum(self, a, b):
         if isinstance(a, Matrix) and isinstance(b, Matrix):
             # teste de matriz de mesma ordem
             if a.rows != b.rows or a.cols != b.cols:
@@ -108,32 +108,71 @@ class LinearAlgebra:
         raise TypeError(f'sum espera argumentos de mesmo tipo mas recebeu {type(a)} e {type(b)}')
 
 
-    def gauss(a):
+    def gauss(self, a):
         m = _matrix_to_lines(a)
         pivot_row = 0
         pivot_col = 0
+        has_not_zero_row = False
 
-        def normalize_col(a: Matrix, col):
-            """ Transforma o elemento do pivo em 1 se possivel
-            """
-            new_a = deepcopy(a)
-            has_not_zero_row = False
-
-            if m[pivot_row][0] == 1:
-                pivot_row += 1
-                return new_m
-        
-            for current_row in m[pivot_row:]:
-                if m[current_row][pivot_col] != 0:
-                    has_not_zero_row = True
-                    break
+        def zero_below_pivot(matrix, pivot_row: int, j: int):
+            for i in range(pivot_row + 1, len(matrix)): # enumerate(m[pivot_row:]):
+                if matrix[i][j] != 0:
+                    new_matrix = self._add_rows(matrix, i, pivot_row, matrix[i][j]*-1)
+                    print(new_matrix)
             
-            if has_not_zero_row == False:
-                return new_m
+            return new_matrix
 
-            # for current_row in m[pivot_row:]:
-            #     if m[current_row][pivot_col] == 1:
+        for _ in range(0, a.cols - 1):
+            # checa se o pivo já tem valor 1
+            if m[pivot_row][pivot_col] == 1:
+                continue
 
+            # checa se existe valor 1 na coluna
+            for i in range(pivot_row, len(m)):
+            # for current_row_index, current_row in enumerate(m[pivot_row:]):
+                if m[i][pivot_col] == 1:
+                    m = self._replace_rows(m, pivot_row, i)
+                    print(m)
+                    m = zero_below_pivot(m, pivot_row, pivot_col)
+                    print(m)
+
+                    continue
+                                
+
+            # checa se na coluna atual existe valor diferente de zero
+            for i in range(pivot_row, len(m)):
+                if m[i][pivot_col] != 0:
+                    m = self._replace_rows(m, pivot_row, i)
+                    print(m)
+                    # transformar pivot em 1
+                    m = zero_below_pivot(m, pivot_row, pivot_col)
+
+                
+                
+                
+            # if m[current_row_index + pivot_row][pivot_col] != 0:
+                    # m = self._replace_rows(m, pivot_row, current_row_index + pivot_row)
+                    # print(m)
+                    # for current_row_index, current_row in enumerate(m[pivot_row:]):
+                    #     if m[current_row_index + pivot_row][pivot_col] == 1:
+                    #         m = self._replace_rows(m, pivot_row, current_row_index + pivot_row)
+                    #         print(m)
+                    #         for row_to_zero_index, row_to_zero in enumerate(m[pivot_row:]):
+                    #             if row_to_zero_index <= pivot_row: continue
+                    #             if m[row_to_zero_index][pivot_col] != 0:
+                    #                 m = self._add_rows(m, row_to_zero_index, pivot_row, row_to_zero[0]*-1)
+                    #                 print(m)                    
+                    #         continue
+
+
+            
+            # termina operacao se a coluna só tem valores igual a zero
+            
+            pivot_row += 1
+            pivot_col += 1
+        
+        return m
+        # print(type(m))
 
         # for row in m:
 
