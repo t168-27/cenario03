@@ -1,5 +1,7 @@
 from cenario import matrix, vector, LinearAlgebra, _matrix_to_lines
 
+linear_algebra = LinearAlgebra()
+
 # print("\nTeste de transposta de matriz quadrada:")
 # matriz_A = matrix.Matrix(3,3,[11, 12, 13, 21, 22, 23, 31, 32, 33])
 # print(matriz_A)
@@ -83,16 +85,34 @@ from cenario import matrix, vector, LinearAlgebra, _matrix_to_lines
 # print(LinearAlgebra().sum(vetor_A, vetor_B))
 
 
-matriz_A = matrix.Matrix(3,4,[0, -2, 3, 1, 3, 6, -3, -2, 1, 6, 3, 5])
+# matriz_A = matrix.Matrix(3,4,[0, -2, 3, 1, 3, 6, -3, -2, 1, 6, 3, 5])
 # print(LinearAlgebra().gauss(matriz_A))
 
 # matriz_resposta = matrix.Matrix(3,4,[1, 2, -1, -(2/3), 0, 1, -(3/2), -(1/2), 0, 0, 0, 1])
 
-print(_matrix_to_lines(matriz_A))
+# print(_matrix_to_lines(matriz_A))
 
 # print(LinearAlgebra()._replace_rows(_matrix_to_lines(matriz_A), 0, 1))
 # print(LinearAlgebra()._multiply_row(_matrix_to_lines(matriz_A), 0, 3))
 # print(LinearAlgebra()._add_rows(_matrix_to_lines(matriz_A), 0, 1, -1))
 
-print('\n' + str(LinearAlgebra().gauss(matriz_A)))
+# print('\n' + str(LinearAlgebra().gauss(matriz_A)))
 
+# matriz_B = matrix.Matrix(3,4,[1,1,2,8,-1,-2,3,1,3,-7,4,10])
+
+# print('\n' + str(matriz_B))
+# print('\n' + str(LinearAlgebra().gauss(matriz_B)))
+#[[1, 1, 2,  8]
+# [0, 1, 5, -9]
+# [0, 0, 1,  2]]
+
+# a = LinearAlgebra().gauss(matrix.Matrix(3,4,[1,1,2,8,-1,-2,3,1,3,-7,4,10]))
+# b = matrix.Matrix(3, 4, [1,1,2,8,0,1,-5,-9,0,0,1,2])
+
+# assert a.elements == b.elements
+
+# a = LinearAlgebra().gauss(matrix.Matrix(3,4,[2,2,2,0,-2,5,2,1,8,1,4,-1]))
+# print(a)
+
+a = LinearAlgebra().gauss(matrix.Matrix(4, 5, [1,2,1,1,1,1,2,2,3,3,1,2,6,12,13,2,4,2,4,6]))
+print(a)
