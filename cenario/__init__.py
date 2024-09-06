@@ -22,6 +22,10 @@ class LinearAlgebra:
     """
     TO DO
 
+    Parameters
+    ----------
+    debug : boolean
+        (Opcional) Ativa o print das operações.
 
     Returns
     -------
@@ -34,9 +38,12 @@ class LinearAlgebra:
     TO DO
 
     """
+    def __init__(self, debug = False):
+        self.debug = debug
+
     def _replace_rows(self, matrix_lines: [list], row1_index: int, row2_index: int) -> [list]:
         """Operacao elementar de troca de linhas."""
-        print(f"Trocando linha {row1_index +1 } com linha {row2_index +1}")
+        if self.debug: print(f"Trocando linha {row1_index +1 } com linha {row2_index +1}")
         row1 = matrix_lines[row1_index]
         row2 = matrix_lines[row2_index]
         
@@ -46,7 +53,7 @@ class LinearAlgebra:
         return matrix_lines
 
     def _multiply_row(self, matrix_lines: [list], row_index: int, scalar) -> [list]:
-        print(f"Multiplicando linha {row_index +1 } por {scalar}")
+        if self.debug: print(f"Multiplicando linha {row_index +1 } por {scalar}")
         row = matrix_lines[row_index]
 
         new_row = list(map(lambda element: element * scalar, row))
@@ -116,38 +123,38 @@ class LinearAlgebra:
         pivot_col = 0
 
         def zero_below_pivot(matrix, pivot_row: int, j: int):
-            for i in range(pivot_row + 1, len(matrix)): # enumerate(m[pivot_row:]):
+            for i in range(pivot_row + 1, len(matrix)):
                 if matrix[i][j] != 0:
                     new_matrix = self._add_rows(matrix, i, pivot_row, matrix[i][j]*-1)
-                    # print(new_matrix)
+                    if self.debug: print(new_matrix)
             
             return new_matrix
 
         ii = -1
         while pivot_row < a.rows -1:
             ii += 1
-        # for ii in range(0, a.rows - 1):
-            print({'pivot_col': pivot_col, 'pivot_row': pivot_row})
-            print("iniciando linha "+ str(ii))
-            pivot_col_elements = [row[pivot_col] for row in m[pivot_row:]]
-            # print(pivot_col_elements)
+            if self.debug: print({'pivot_col': pivot_col, 'pivot_row': pivot_row})
+            if self.debug: print("iniciando linha "+ str(ii))
+
+            pivot_col_elements = [row[pivot_col] for row in m[pivot_row:]]            
+            if self.debug: print(pivot_col_elements)
             
             # checa se o pivo já tem valor 1
             if 1 in pivot_col_elements:
                 if pivot_col_elements[0] != 1:
                     m = self._replace_rows(m, pivot_row, pivot_col_elements.index(1) + pivot_row)
-                    print(m)
+                    if self.debug: print(m)
                 m = zero_below_pivot(m, pivot_row, pivot_col)
-                print(m)
+                if self.debug: print(m)
             
             elif any(pivot_col_elements):
                 for e in pivot_col_elements:
                     if e != 0:
                         i = pivot_col_elements.index(e) + pivot_row
                         m  = self._multiply_row(m, i, (1 / e))
-                        print(m)
+                        if self.debug: print(m)
                         m = self._replace_rows(m, pivot_row, i)
-                        print(m)
+                        if self.debug: print(m)
                         m = zero_below_pivot(m, pivot_row, pivot_col)
                         break
             

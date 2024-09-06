@@ -15,7 +15,7 @@ try:
     print("[OK]")
 except:
     print("[Erro]")
-    print(f"\nErro: Transposta matriz quadrada esperada: \n\n {matriz_esperada} \n\n mas foi recebida: \n\n {matriz_resultado}")
+    print(f"\nErro: Transposta matriz quadrada esperada: \n\n {matriz_esperada} \n\n mas foi recebida: \n\n {matriz_resultado}\n\n")
 
 
 print("Método Matrix.get ", end='')
@@ -31,7 +31,7 @@ try:
     print("[OK]")
 except:
     print("[Erro]")
-    print(f"\nErro: Lista esperada era \n\n {lista_esperada} \n\n mas foi recebida \n\n {lista_resultado}.")
+    print(f"\nErro: Lista esperada era \n\n {lista_esperada} \n\n mas foi recebida \n\n {lista_resultado}.\n\n")
 
 
 print("Método Matrix.set ", end='')
@@ -60,7 +60,7 @@ try:
     print("[OK]")
 except:
     print("[Erro]")
-    print(f"\nErro: Lista esperada era {lista_esperada} mas foi recebida {lista_resultado}.")
+    print(f"\nErro: Lista esperada era {lista_esperada} mas foi recebida {lista_resultado}.\n\n")
 
 
 matriz_teste = Matrix(3, 2, [1,2,3,4,5,6])
@@ -76,7 +76,7 @@ try:
     print("[OK]")
 except:
     print("[Erro]")
-    print(f"\nErro: Transposta matriz quadrada esperada: \n\n {matriz_esperada} \n\n mas foi recebida: \n\n {matriz_resultado}")
+    print(f"\nErro: Transposta matriz quadrada esperada: \n\n {matriz_esperada} \n\n mas foi recebida: \n\n {matriz_resultado}\n\n")
 
 
 matriz_teste_2 = Matrix(3, 2, [2,3,4,5,6,7])
@@ -92,14 +92,14 @@ try:
     print("[OK]")
 except:
     print("[Erro]")
-    print(f"\nErro: Matriz somada esperada: \n\n {matriz_esperada} \n\n mas foi recebida: \n\n {matriz_resultado}")
+    print(f"\nErro: Matriz somada esperada: \n\n {matriz_esperada} \n\n mas foi recebida: \n\n {matriz_resultado}\n\n")
 
 
 matriz_teste_3 = Matrix(3,4,[0, -2, 3, 1, 3, 6, -3, -2, 1, 6, 3, 5])
 
 print("Método LinearAlgebra.gauss ", end='')
-matriz_esperada = Matrix(3, 4, [1,2,-1,-(2/3),0,1,-(3/2),-(1/2),0,0,0,1])
-matriz_resultado = LinearAlgebra().gauss(matriz_esperada)
+matriz_esperada = Matrix(3, 4, [1, 6, 3, 5, 0, 1, 1, 1.4167, 0, 0, 1, 0.7667])
+matriz_resultado = LinearAlgebra().gauss(matriz_teste_3)
 
 try:
     assert matriz_resultado.elements == matriz_esperada.elements
@@ -108,4 +108,20 @@ try:
     print("[OK]")
 except:
     print("[Erro]")
-    print(f"\nErro: Matriz escalonada esperada: \n\n {matriz_esperada} \n\n mas foi recebida: \n\n {matriz_resultado}")
+    print(f"\nErro: Matriz escalonada esperada: \n\n {matriz_esperada} \n\n mas foi recebida: \n\n {matriz_resultado}\n\n")
+
+
+matriz_teste_4 = Matrix(4, 5, [1,2,1,1,1,1,2,2,3,3,1,2,6,12,13,2,4,2,4,6])
+
+print("Método LinearAlgebra.gauss (Matriz infinitas soluções) ", end='')
+matriz_esperada = Matrix(4, 5, [1, 2, 1, 1, 1, 0, 0, 1, 2, 2, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0])
+matriz_resultado = LinearAlgebra().gauss(matriz_teste_4)
+
+try:
+    assert matriz_resultado.elements == matriz_esperada.elements
+    assert matriz_resultado.rows == matriz_esperada.rows
+    assert matriz_resultado.cols == matriz_esperada.cols
+    print("[OK]")
+except:
+    print("[Erro]")
+    print(f"\nErro: Matriz escalonada esperada: \n\n {matriz_esperada} \n\n mas foi recebida: \n\n {matriz_resultado}\n\n")
