@@ -18,6 +18,9 @@ TO DO
 def _matrix_to_lines(matrix: Matrix) -> [list]:
     return [matrix.elements[_get_element_index(l, 1, matrix.cols): _get_element_index(l, matrix.cols, matrix.cols) + 1] for l in range(1, matrix.rows+1)]
 
+def _matrix_to_columns(matrix: Matrix) -> [list]:
+    return [[matrix.elements[i] for i in list(range(j - 1, ((matrix.rows - 1) * matrix.cols) + j, matrix.cols))] for j in range(1, matrix.cols + 1)]
+
 class LinearAlgebra:
     """
     TO DO
@@ -169,3 +172,39 @@ class LinearAlgebra:
             m = self._multiply_row(m, pivot_row, (1 / m[pivot_row][pivot_col]))
         
         return Matrix(a.rows, a.cols, [round(e, 4) for l in m for e in l])
+
+    def determinant(self, m: Matrix) -> float:
+        if m.rows != m.cols:
+            raise Exception(f'_determinant(m) espera uma matriz quadrada mas recebeu uma matriz {m.rows}x{m.cols}.')
+
+        rows = _matrix_to_lines(m)
+        cols = _matrix_to_columns(m)
+
+        have_null_row = not all([any(row) for row in rows])
+        have_null_col = not all([any(col) for col in cols])
+        
+        have_equal_rows = len(rows) != len(list(set([tuple(row) for row in rows])))
+        have_equal_cols = len(cols) != len(list(set(tuple(col) for col in cols)))
+        
+        if have_null_row or have_null_col or have_equal_rows or have_equal_cols:
+            return 0
+
+        if m.rows == 2:
+            return (m.get(1,1) * m.get(2,2)) - (m.get(1,2) * m.get(2,1))
+        else:
+            row_to_expand = 1
+            det = 0.0
+
+            l = list(range(1, m.rows + 1))
+            c = list(range(1, m.cols + 1))
+
+            l.remove(row_to_expand)
+
+            for k, e in enumerate(rows[row_to_expand - 1]):
+                c_submatrix = [j for j in c if j != (k + 1)]
+                submatrix = Matrix(m.rows - 1, m.cols - 1, [m.get(i,j) for i in l for j in c_submatrix])
+                cofactor = ((-1) ** (row_to_expand + k + 1)) * determinant(submatrix)
+            
+
+    def solve(self, a) -> Matrix:
+        ...

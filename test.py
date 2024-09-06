@@ -1,118 +1,43 @@
-from cenario import matrix, vector, LinearAlgebra, _matrix_to_lines
+from cenario import LinearAlgebra, _matrix_to_columns, _matrix_to_lines
+from cenario.matrix import Matrix
+from copy import deepcopy
+# a = Matrix(2, 2, [1, 5, -2, 2])
 
-linear_algebra = LinearAlgebra()
-
-# print("\nTeste de transposta de matriz quadrada:")
-# matriz_A = matrix.Matrix(3,3,[11, 12, 13, 21, 22, 23, 31, 32, 33])
-# print(matriz_A)
-# matriz_B = LinearAlgebra().transpose(matriz_A)
-# print(matriz_B)
-
-# print(matriz_A.get(1,1))
-# print(matriz_A.get(1,2))
-# print(matriz_A.get(1,3))
-# print(matriz_A.get(2,1))
-# print(matriz_A.get(2,2))
-# print(matriz_A.get(2,3))
-# print(matriz_A.get(3,1))
-# print(matriz_A.get(3,2))
-# print(matriz_A.get(3,3))
-
-# matriz_A.set(1,1,0)
-# matriz_A.set(1,2,1)
-# matriz_A.set(1,3,2)
-# matriz_A.set(2,1,10)
-# matriz_A.set(2,2,11)
-# matriz_A.set(2,3,12)
-# matriz_A.set(3,1,20)
-# matriz_A.set(3,2,21)
-# matriz_A.set(3,3,22)
-
-# print(matriz_A)
+# print(LinearAlgebra._determinant(a))
+# print(LinearAlgebra._determinant(LinearAlgebra().transpose(a)))
 
 
-# vector_a = vector.Vector(3, [11, 21, 31])
+e = [11,12,13,21,22,23,31,32,33]
+m = Matrix(3, 3, e)
 
-# print('')
-# print(vector_a)
+print(m, end = '\n\n')
 
-# print(vector_a.get(1))
-# print(vector_a.get(2))
-# print(vector_a.get(3))
+rows = _matrix_to_lines(m)
 
-# vector_a.set(1, 0)
-# vector_a.set(2, 1)
-# vector_a.set(3, 2)
+row_to_expand = 1
 
-# print(vector_a.get(1))
-# print(vector_a.get(2))
-# print(vector_a.get(3))
+l = list(range(1, m.rows + 1))
+c = list(range(1, m.cols + 1))
 
-# print("\nTeste de transposta de matriz não quadrada:")
-# matriz_C = matrix.Matrix(3, 2, [1,2,3,4,5,6])
-# print(matriz_C)
+l.remove(row_to_expand)
 
-# matriz_D = LinearAlgebra().transpose(matriz_C)
-# print(matriz_D)
-
-
-# print("\nTeste de transposta de vetor:")
-# vetor_A = vector.Vector(3, [1,2,3])
-# print(vetor_A)
-
-# vetor_B = LinearAlgebra().transpose(vetor_A)
-# print(vetor_B)
-
-# print('\nTeste de soma de matrizes: ')
-# matriz_A = matrix.Matrix(3, 2, [1,2,3,4,5,6])
-# matriz_B = matrix.Matrix(3, 2, [2,3,4,5,6,7])
-
-# print(LinearAlgebra().sum(matriz_A, matriz_B))
-
-# print('\nTeste de soma de vetores linha: ')
-# vetor_A = vector.Vector(3, [1,2,3])
-# vetor_B = vector.Vector(3, [2,3,4])
-
-# print(LinearAlgebra().sum(vetor_A, vetor_B))
-
-# print('\nTeste de soma de vetores coluna: ')
-# vetor_A = vector.Vector(3, [1,2,3])
-# vetor_B = vector.Vector(3, [2,3,4])
-
-# vetor_A = LinearAlgebra().transpose(vetor_A)
-# vetor_B = LinearAlgebra().transpose(vetor_B)
-
-# print(LinearAlgebra().sum(vetor_A, vetor_B))
+for k, e in enumerate(rows[row_to_expand - 1]):
+    c_submatrix = [j for j in c if j != (k + 1)]
+    submatrix = Matrix(m.rows - 1, m.cols - 1, [m.get(i,j) for i in l for j in c_submatrix])
+    print(submatrix)
+    det = LinearAlgebra().determinant(submatrix)
+    cc = ((-1) ** (row_to_expand + k + 1))
+    print({'det': det, 'k': k,'row_to_expand': row_to_expand,'cc': cc})
+    # cofactor =  * det
 
 
-# matriz_A = matrix.Matrix(3,4,[0, -2, 3, 1, 3, 6, -3, -2, 1, 6, 3, 5])
-# print(LinearAlgebra().gauss(matriz_A))
+# print(LinearAlgebra().determinant(m))
 
-# matriz_resposta = matrix.Matrix(3,4,[1, 2, -1, -(2/3), 0, 1, -(3/2), -(1/2), 0, 0, 0, 1])
+# rows = _matrix_to_lines(m)
+# cols = _matrix_to_columns(m)
 
-# print(_matrix_to_lines(matriz_A))
+# print(rows)
+# print(cols)
 
-# print(LinearAlgebra()._replace_rows(_matrix_to_lines(matriz_A), 0, 1))
-# print(LinearAlgebra()._multiply_row(_matrix_to_lines(matriz_A), 0, 3))
-# print(LinearAlgebra()._add_rows(_matrix_to_lines(matriz_A), 0, 1, -1))
-
-# print('\n' + str(LinearAlgebra().gauss(matriz_A)))
-
-# matriz_B = matrix.Matrix(3,4,[1,1,2,8,-1,-2,3,1,3,-7,4,10])
-
-# print('\n' + str(matriz_B))
-# print('\n' + str(LinearAlgebra().gauss(matriz_B)))
-#[[1, 1, 2,  8]
-# [0, 1, 5, -9]
-# [0, 0, 1,  2]]
-
-# a = LinearAlgebra().gauss(matrix.Matrix(3,4,[1,1,2,8,-1,-2,3,1,3,-7,4,10]))
-# b = matrix.Matrix(3, 4, [1,1,2,8,0,1,-5,-9,0,0,1,2])
-
-# assert a.elements == b.elements
-
-# a = LinearAlgebra().gauss(matrix.Matrix(3,4,[2,2,2,0,-2,5,2,1,8,1,4,-1]))
-# print(a)
-
-a = LinearAlgebra().gauss(matrix.Matrix(4, 5, [1,2,1,1,1,1,2,2,3,3,1,2,6,12,13,2,4,2,4,6]))
-print(a)
+# print(not all([any(row) for row in rows]))
+# print(not all([any(col) for col in cols]))
