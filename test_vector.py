@@ -1,13 +1,15 @@
 from cenario.vector import Vector
-from cenario import LinearAlgebra
+from cenario.linear_algebra import LinearAlgebra
 from copy import deepcopy
+
+linear_algebra = LinearAlgebra()
 
 vetor_teste = Vector(3, [11, 12, 13])
 
 print("Transposta de vetor ", end='')
 vetor_esperado = deepcopy(vetor_teste)
 vetor_esperado.rows, vetor_esperado.cols = 3, 1
-vetor_resultado = LinearAlgebra().transpose(vetor_teste)
+vetor_resultado = linear_algebra.transpose(vetor_teste)
 
 try:
     assert vetor_resultado.elements == vetor_esperado.elements
@@ -72,18 +74,19 @@ except:
 
 vetor_teste_2 = Vector(3, [2,3,4])
 
-print("Método LinearAlgebra.sum (Vector) (Linha) ", end='')
+print("Método LinearAlgebra.sum (Vector) (Coluna) ", end='')
 vetor_esperada = Vector(3, [13,15,17])
 tmp_vetor_teste = deepcopy(vetor_teste)
 tmp_vetor_teste_2 = deepcopy(vetor_teste_2)
-tmp_vetor_teste = LinearAlgebra().transpose(tmp_vetor_teste)
-tmp_vetor_teste_2 = LinearAlgebra().transpose(tmp_vetor_teste_2)
+tmp_vetor_teste = linear_algebra.transpose(tmp_vetor_teste)
+tmp_vetor_teste_2 = linear_algebra.transpose(tmp_vetor_teste_2)
 vetor_esperada.rows = 3
 vetor_esperada.cols = 1
-vetor_resultado = LinearAlgebra().sum(tmp_vetor_teste, tmp_vetor_teste_2)
+vetor_resultado = linear_algebra.sum(tmp_vetor_teste, tmp_vetor_teste_2)
 
 try:
     assert vetor_resultado.elements == vetor_esperada.elements
+    assert vetor_resultado.dim == vetor_esperado.dim
     assert vetor_resultado.rows == vetor_esperada.rows
     assert vetor_resultado.cols == vetor_esperada.cols
     print("[OK]")
@@ -92,14 +95,66 @@ except:
     print(f"\nErro: Vetor somado esperado: \n\n {vetor_esperada} \n\n mas foi recebido: \n\n {vetor_resultado}")
 
 
-print("Método LinearAlgebra.sum (Vector) (Coluna) ", end='')
+print("Método LinearAlgebra.sum (Vector) (Linha) ", end='')
 vetor_esperada = Vector(3, [13,15,17])
-vetor_resultado = LinearAlgebra().sum(vetor_teste, vetor_teste_2)
+vetor_resultado = linear_algebra.sum(vetor_teste, vetor_teste_2)
 
 try:
     assert vetor_resultado.elements == vetor_esperada.elements
+    assert vetor_resultado.dim == vetor_esperado.dim
     assert vetor_resultado.rows == vetor_esperada.rows
     assert vetor_resultado.cols == vetor_esperada.cols
+    print("[OK]")
+except:
+    print("[Erro]")
+    print(f"\nErro: Vetor somado esperado: \n\n {vetor_esperada} \n\n mas foi recebido: \n\n {vetor_resultado}")
+
+print("Método LinearAlgebra.times (Vector) (Coluna) ", end='')
+vetor_esperada = Vector(3, [22, 36, 52])
+tmp_vetor_teste = deepcopy(vetor_teste)
+tmp_vetor_teste_2 = deepcopy(vetor_teste_2)
+tmp_vetor_teste = linear_algebra.transpose(tmp_vetor_teste)
+tmp_vetor_teste_2 = linear_algebra.transpose(tmp_vetor_teste_2)
+vetor_esperada.rows = 3
+vetor_esperada.cols = 1
+vetor_resultado = linear_algebra.times(tmp_vetor_teste, tmp_vetor_teste_2)
+
+try:
+    assert vetor_resultado.elements == vetor_esperada.elements
+    assert vetor_resultado.dim == vetor_esperado.dim
+    assert vetor_resultado.rows == vetor_esperada.rows
+    assert vetor_resultado.cols == vetor_esperada.cols
+    print("[OK]")
+except:
+    print("[Erro]")
+    print(f"\nErro: Vetor somado esperado: \n\n {vetor_esperada} \n\n mas foi recebido: \n\n {vetor_resultado}")
+
+
+print("Método LinearAlgebra.times (Vector) (Linha) ", end='')
+vetor_esperada = Vector(3, [22, 36, 52])
+vetor_resultado = linear_algebra.times(vetor_teste, vetor_teste_2)
+
+try:
+    assert vetor_resultado.elements == vetor_esperada.elements
+    assert vetor_resultado.dim == vetor_esperado.dim
+    assert vetor_resultado.rows == vetor_esperada.rows
+    assert vetor_resultado.cols == vetor_esperada.cols
+    print("[OK]")
+except:
+    print("[Erro]")
+    print(f"\nErro: Vetor somado esperado: \n\n {vetor_esperada} \n\n mas foi recebido: \n\n {vetor_resultado}")
+
+vetor_teste_3 = linear_algebra.transpose(Vector(3, [3,1,1]))
+
+print("Método LinearAlgebra.dot (Vector) ", end='')
+vetor_esperado = Vector(1, [13])
+vetor_resultado = linear_algebra.dot(vetor_teste_2, vetor_teste_3)
+
+try:
+    assert vetor_resultado.elements == vetor_esperado.elements
+    assert vetor_resultado.dim == vetor_esperado.dim
+    assert vetor_resultado.rows == vetor_esperado.rows
+    assert vetor_resultado.cols == vetor_esperado.cols
     print("[OK]")
 except:
     print("[Erro]")
