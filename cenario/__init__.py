@@ -56,6 +56,7 @@ class LinearAlgebra:
         return matrix_lines
 
     def _multiply_row(self, matrix_lines: [list], row_index: int, scalar) -> [list]:
+        """Operacao elementar de troca de linha por ela multiplicado por escalar."""
         if self.debug: print(f"Multiplicando linha {row_index +1 } por {scalar}")
         row = matrix_lines[row_index]
 
@@ -66,6 +67,7 @@ class LinearAlgebra:
         return matrix_lines
 
     def _add_rows(self, matrix_lines: [list], row1_index: int, row2_index: int, scalar = 1) -> [list]:
+        """Operacao elementar de troca de linha por ela somada por outra linha."""
         row1 = matrix_lines[row1_index]
         row2 = matrix_lines[row2_index]
 
@@ -118,6 +120,30 @@ class LinearAlgebra:
             return c
         
         raise TypeError(f'sum espera argumentos de mesmo tipo mas recebeu {type(a)} e {type(b)}')
+
+
+    def dot(self, a, b) -> Matrix:
+        if a.cols != b.rows:
+            raise ValueError(f'LinearAlgebra.dot requer um número de colunas do primeiro objeto igual ao de linhas do segundo mas recebeu {a.cols} e {b.rows}.')
+
+        if isinstance(a, Vector) and isinstance(b, Vector):
+            return Vector(1, [sum([ea * eb for ea, eb in zip(a.elements, b.elements)])])
+
+        elif isinstance(a, Matrix) and isinstance(b, Matrix):
+            a_rows = _matrix_to_lines(a)
+            b_cols = _matrix_to_columns(b)
+
+            elements = []
+
+            for row in a_rows:
+                a_row = Vector(a.cols, row)
+                for col in b_cols:
+                    elements.append(self.dot(a_row, self.transpose(Vector(b.rows, col))).elements[0])
+
+            return Matrix(a.rows, b.cols, elements) 
+
+        else:
+            raise TypeError(f"LinearAlgebra.dot requer dois objetos Vector ou Matrix mas recebeu {type(a)} e {type(b)}")
 
 
     def gauss(self, a):
