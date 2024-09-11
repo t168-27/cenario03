@@ -158,3 +158,19 @@ try:
 except:
     print("[Erro]")
     print(f"\nErro: Vetor somado esperado: \n\n {matriz_esperada} \n\n mas foi recebido: \n\n {matriz_resultado}")
+
+
+matriz_teste_8 = Matrix(3, 4, [2, 4, 8, 1, 2, 3, 0, 4, 0, 1, 2, 6])
+
+print("Método LinearAlgebra.solve ", end='')
+matriz_esperada = Matrix(3, 1, [-11.5, 9, -1.5])
+matriz_resultado = linear_algebra.solve(matriz_teste_8)
+
+try:
+    assert matriz_resultado.elements == matriz_esperada.elements
+    assert matriz_resultado.rows == matriz_esperada.rows
+    assert matriz_resultado.cols == matriz_esperada.cols
+    print("[OK]")
+except:
+    print("[Erro]")
+    print(f"\nErro: Matriz coluna X esperada: \n\n {matriz_esperada} \n\n mas foi recebida: \n\n {matriz_resultado}")

@@ -9,7 +9,7 @@ TO DO
 ----------------------------
 
 """
-def _get_element_index(row: int, col: int, n_cols: int) -> int:
+def get_element_index(row: int, col: int, n_cols: int) -> int:
     return ((row-1) * n_cols) + (col-1)
 
 class Matrix:
@@ -54,8 +54,8 @@ class Matrix:
 
     
     def get(self, i: int, j: int) -> int:
-        return self.elements[_get_element_index(i, j, self.cols)]
+        return self.elements[get_element_index(i, j, self.cols)]
 
     
     def set(self, i: int, j: int, value):
-        self.elements[_get_element_index(i, j, self.cols)] = value
+        self.elements[get_element_index(i, j, self.cols)] = value

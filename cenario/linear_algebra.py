@@ -1,6 +1,6 @@
 from copy import deepcopy
-from . import _matrix_to_lines, _matrix_to_columns
-from .matrix import Matrix, _get_element_index
+from . import matrix_to_lines, matrix_to_columns, lines_to_matrix, columns_to_matrix
+from .matrix import Matrix, get_element_index
 from .vector import Vector
 
 class LinearAlgebra:
@@ -25,7 +25,8 @@ class LinearAlgebra:
     """
     def __init__(self, debug = False):
         self.debug = debug
-    
+
+
     def _replace_rows(self, matrix_lines: [list], row1_index: int, row2_index: int) -> [list]:
         """Operacao elementar de troca de linhas."""
         if self.debug: print(f"Trocando linha {row1_index +1 } com linha {row2_index +1}")
@@ -37,6 +38,7 @@ class LinearAlgebra:
 
         return matrix_lines
 
+
     def _multiply_row(self, matrix_lines: [list], row_index: int, scalar) -> [list]:
         """Operacao elementar de troca de linha por ela multiplicado por escalar."""
         if self.debug: print(f"Multiplicando linha {row_index +1 } por {scalar}")
@@ -47,6 +49,7 @@ class LinearAlgebra:
         matrix_lines[row_index] = new_row
 
         return matrix_lines
+
 
     def _add_rows(self, matrix_lines: [list], row1_index: int, row2_index: int, scalar = 1) -> [list]:
         """Operacao elementar de troca de linha por ela somada por outra linha."""
@@ -129,18 +132,18 @@ class LinearAlgebra:
             raise ValueError(f'LinearAlgebra.dot requer um número de colunas do primeiro objeto igual ao de linhas do segundo mas recebeu {a.cols} e {b.rows}.')
 
         if isinstance(a, Vector) and isinstance(b, Vector):
-            return Vector(1, [sum([ea * eb for ea, eb in zip(a.elements, b.elements)])])
+            return Matrix(1, 1, [sum([ea * eb for ea, eb in zip(a.elements, b.elements)])])
 
         elif isinstance(a, Matrix) and isinstance(b, Matrix):
-            a_rows = _matrix_to_lines(a)
-            b_cols = _matrix_to_columns(b)
+            a_rows = matrix_to_lines(a)
+            b_cols = matrix_to_columns(b)
 
             elements = []
 
             for row in a_rows:
                 a_row = Vector(a.cols, row)
                 for col in b_cols:
-                    elements.append(self.dot(a_row, self.transpose(Vector(b.rows, col))).elements[0])
+                    elements.append(self.dot(a_row, self.transpose(Vector(b.rows, col))).get(1,1))
 
             return Matrix(a.rows, b.cols, elements) 
 
@@ -149,7 +152,7 @@ class LinearAlgebra:
 
 
     def gauss(self, a):
-        m = _matrix_to_lines(a)
+        m = matrix_to_lines(a)
         pivot_row = 0
         pivot_col = 0
 
@@ -158,6 +161,8 @@ class LinearAlgebra:
                 if matrix[i][j] != 0:
                     new_matrix = self._add_rows(matrix, i, pivot_row, matrix[i][j]*-1)
                     if self.debug: print(new_matrix)
+                else:
+                    new_matrix = deepcopy(matrix)
             
             return new_matrix
 
@@ -201,38 +206,31 @@ class LinearAlgebra:
         
         return Matrix(a.rows, a.cols, [round(e, 4) for l in m for e in l])
 
-    def determinant(self, m: Matrix) -> float:
-        if m.rows != m.cols:
-            raise ValueError(f'determinant(m) espera uma matriz quadrada mas recebeu uma matriz {m.rows}x{m.cols}.')
-
-        rows = _matrix_to_lines(m)
-        cols = _matrix_to_columns(m)
-
-        have_null_row = not all([any(row) for row in rows])
-        have_null_col = not all([any(col) for col in cols])
-        
-        have_equal_rows = len(rows) != len(list(set([tuple(row) for row in rows])))
-        have_equal_cols = len(cols) != len(list(set(tuple(col) for col in cols)))
-        
-        if have_null_row or have_null_col or have_equal_rows or have_equal_cols:
-            return 0
-
-        if m.rows == 2:
-            return (m.get(1,1) * m.get(2,2)) - (m.get(1,2) * m.get(2,1))
-        else:
-            row_to_expand = 1
-            det = 0.0
-
-            l = list(range(1, m.rows + 1))
-            c = list(range(1, m.cols + 1))
-
-            l.remove(row_to_expand)
-
-            for k, e in enumerate(rows[row_to_expand - 1]):
-                c_submatrix = [j for j in c if j != (k + 1)]
-                submatrix = Matrix(m.rows - 1, m.cols - 1, [m.get(i,j) for i in l for j in c_submatrix])
-                cofactor = ((-1) ** (row_to_expand + k + 1)) * determinant(submatrix)
-            
 
     def solve(self, a) -> Matrix:
-        ...
+        reduced_a = self.gauss(a)
+        
+        cols_a = matrix_to_columns(reduced_a)
+        coefficient_cols = cols_a[:-1]
+        b = cols_a[-1]
+        
+        coefficient_matrix = columns_to_matrix(coefficient_cols)
+        coefficient_rows = matrix_to_lines(coefficient_matrix)
+
+        for row in coefficient_rows:
+            if not any(row):
+                raise Exception("O sistema não tem solução definida ou tem infinitas soluções.")
+        
+        x_list = [0 for _ in b]
+        
+        x_list[-1] = b[-1]
+
+        x = self.transpose(Vector(len(b), x_list))
+
+        i = len(b) - 2
+        for row in list(reversed(coefficient_rows[:-1])):
+            x_value = b[i] - self.dot(Vector(len(row), row), x).get(1,1)
+            x.set(i + 1, x_value)
+            i -= 1
+
+        return x

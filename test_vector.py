@@ -152,10 +152,9 @@ vetor_resultado = linear_algebra.dot(vetor_teste_2, vetor_teste_3)
 
 try:
     assert vetor_resultado.elements == vetor_esperado.elements
-    assert vetor_resultado.dim == vetor_esperado.dim
     assert vetor_resultado.rows == vetor_esperado.rows
     assert vetor_resultado.cols == vetor_esperado.cols
     print("[OK]")
 except:
     print("[Erro]")
-    print(f"\nErro: Vetor somado esperado: \n\n {vetor_esperada} \n\n mas foi recebido: \n\n {vetor_resultado}")
+    print(f"\nErro: Vetor somado esperado: \n\n {vetor_esperado} \n\n mas foi recebido: \n\n {vetor_resultado}")
