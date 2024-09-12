@@ -5,31 +5,26 @@ from .vector import Vector
 
 class LinearAlgebra:
     """
-    TO DO
-
-    Parameters
-    ----------
-    debug : boolean
-        (Opcional) Ativa o print das operações.
-
-    Returns
-    -------
-    Vector : vector.Vector
-        TO DO
-
-    Examples
-    --------
-    >>> from cenario import LinearAlgebra
-    TO DO
-
+    Classe que fornece métodos para operações de álgebra linear, 
+    incluindo adição, multiplicação, produto escalar, 
+    transposição e resolução de sistemas lineares.
     """
-    def __init__(self, debug = False):
-        self.debug = debug
-
-
+    
     def _replace_rows(self, matrix_lines: [list], row1_index: int, row2_index: int) -> [list]:
-        """Operacao elementar de troca de linhas."""
-        if self.debug: print(f"Trocando linha {row1_index +1 } com linha {row2_index +1}")
+        """
+        Operacao elementar de troca de linhas.
+
+        Parameters
+        ----------
+        matrix_lines (list): Uma lista de linhas.
+        row1_index (int): O índice da primeira linha a ser trocada.
+        row2_index (int): O índice da segunda linha a ser trocada.
+
+        Returns
+        -------
+        list: A lista de linhas com as linhas trocadas.
+        """
+
         row1 = matrix_lines[row1_index]
         row2 = matrix_lines[row2_index]
         
@@ -40,8 +35,19 @@ class LinearAlgebra:
 
 
     def _multiply_row(self, matrix_lines: [list], row_index: int, scalar) -> [list]:
-        """Operacao elementar de troca de linha por ela multiplicado por escalar."""
-        if self.debug: print(f"Multiplicando linha {row_index +1 } por {scalar}")
+        """
+        Multiplica uma linha da matriz por um escalar.
+
+        Parameters
+        ----------
+        matrix_lines (list): Uma lista de linhas.
+        row_index (int): O índice da linha a ser multiplicada.
+        scalar (int/float): O escalar pelo qual multiplicar a linha.
+
+        Returns
+        -------
+        list: A lista de linhas com a linha multiplicada.
+        """
         row = matrix_lines[row_index]
 
         new_row = list(map(lambda element: element * scalar, row))
@@ -52,7 +58,20 @@ class LinearAlgebra:
 
 
     def _add_rows(self, matrix_lines: [list], row1_index: int, row2_index: int, scalar = 1) -> [list]:
-        """Operacao elementar de troca de linha por ela somada por outra linha."""
+        """
+        Adiciona uma linha a outra linha na matriz, multiplicada por um escalar.
+
+        Parameters
+        ----------
+        matrix_lines (list): Uma lista de linhas.
+        row1_index (int): O índice da linha à qual a outra linha será adicionada.
+        row2_index (int): O índice da linha a ser adicionada.
+        scalar (int/float): O escalar para multiplicar a linha a ser adicionada. O valor padrão é 1.
+
+        Returns
+        -------
+        list: A lista de linhas com a linha adicionada.
+        """
         row1 = matrix_lines[row1_index]
         row2 = matrix_lines[row2_index]
 
@@ -64,6 +83,17 @@ class LinearAlgebra:
 
 
     def transpose(self, a):
+        """
+        Substitui linhas por colunas em um objeto Matrix ou Vector.
+
+        Parameters
+        ----------
+        a (Matrix/Vector): O objeto a ser transposto.
+
+        Returns
+        -------
+        Matrix/Vector: O objeto transposto.
+        """
         new_a = deepcopy(a)
         if isinstance(a, Matrix):
             new_a.rows = a.cols
@@ -83,6 +113,18 @@ class LinearAlgebra:
 
 
     def sum(self, a, b):
+        """
+        Realiza a adição de matrizes em objetos do tipo Matrix ou Vector.
+
+        Parameters
+        ----------
+        a (Matrix/Vector): O primeiro objeto a ser somado.
+        b (Matrix/Vector): O segundo objeto a ser somado.
+
+        Returns
+        -------
+        Matrix/Vector: A soma dos dois objetos.
+        """
         if isinstance(a, Matrix) and isinstance(b, Matrix):
             if a.rows != b.rows or a.cols != b.cols:
                 raise ValueError(f'Adição de matrizes espera matrizes de mesma ordem mas recebeu {a.rows}x{a.cols} e {b.rows}x{b.cols}.')
@@ -107,6 +149,18 @@ class LinearAlgebra:
 
 
     def times(self, a, b):
+        """
+        Multiplica elemento a elemento dois objetos do tipo Matrix ou Vector.
+
+        Parameters
+        ----------
+        a (Matrix/Vector): O primeiro objeto a ser multiplicado.
+        b (Matrix/Vector): O segundo objeto a ser multiplicado.
+
+        Returns
+        -------
+        Matrix/Vector: O resultado da multiplicação elemento a elemento.
+        """
         if isinstance(a, Matrix) and isinstance(b, Matrix):
             if a.rows != b.rows or a.cols != b.cols:
                 return ValueError(f'Multiplição elemento a elemento de matrizes espera matrizes de mesma ordem mas recebeu {a.rows}x{a.cols} e {b.rows}x{b.cols}.')
@@ -128,6 +182,18 @@ class LinearAlgebra:
 
 
     def dot(self, a, b) -> Matrix:
+        """
+        Calcula o produto de matrize entre dois objetos do tipo Matrix ou Vector.
+
+        Parameters
+        ----------
+        a (Matrix/Vector): O primeiro objeto para o produto.
+        b (Matrix/Vector): O segundo objeto para o produto.
+
+        Returns
+        -------
+        Matrix: O resultado do produto.
+        """
         if a.cols != b.rows:
             raise ValueError(f'LinearAlgebra.dot requer um número de colunas do primeiro objeto igual ao de linhas do segundo mas recebeu {a.cols} e {b.rows}.')
 
@@ -152,6 +218,17 @@ class LinearAlgebra:
 
 
     def gauss(self, a):
+        """
+        Aplica o método de eliminação de Gauss para reduzir um objeto Matrix.
+
+        Parameters
+        ----------
+        a (Matrix): A matriz a ser reduzida.
+
+        Returns
+        -------
+        Matrix: A matriz reduzida.
+        """
         m = matrix_to_lines(a)
         pivot_row = 0
         pivot_col = 0
@@ -160,7 +237,6 @@ class LinearAlgebra:
             for i in range(pivot_row + 1, len(matrix)):
                 if matrix[i][j] != 0:
                     new_matrix = self._add_rows(matrix, i, pivot_row, matrix[i][j]*-1)
-                    if self.debug: print(new_matrix)
                 else:
                     new_matrix = deepcopy(matrix)
             
@@ -169,28 +245,21 @@ class LinearAlgebra:
         ii = -1
         while pivot_row < a.rows -1:
             ii += 1
-            if self.debug: print({'pivot_col': pivot_col, 'pivot_row': pivot_row})
-            if self.debug: print("iniciando linha "+ str(ii))
 
             pivot_col_elements = [row[pivot_col] for row in m[pivot_row:]]            
-            if self.debug: print(pivot_col_elements)
             
             # checa se o pivo já tem valor 1
             if 1 in pivot_col_elements:
                 if pivot_col_elements[0] != 1:
                     m = self._replace_rows(m, pivot_row, pivot_col_elements.index(1) + pivot_row)
-                    if self.debug: print(m)
                 m = zero_below_pivot(m, pivot_row, pivot_col)
-                if self.debug: print(m)
             
             elif any(pivot_col_elements):
                 for e in pivot_col_elements:
                     if e != 0:
                         i = pivot_col_elements.index(e) + pivot_row
                         m  = self._multiply_row(m, i, (1 / e))
-                        if self.debug: print(m)
                         m = self._replace_rows(m, pivot_row, i)
-                        if self.debug: print(m)
                         m = zero_below_pivot(m, pivot_row, pivot_col)
                         break
             
@@ -208,6 +277,17 @@ class LinearAlgebra:
 
 
     def solve(self, a) -> Matrix:
+        """
+        Resolve um sistema linear representado por uma matriz aumentada (Matrix).
+
+        Parameters
+        ----------
+        a (Matrix): A matriz aumentada do sistema linear.
+
+        Returns
+        -------
+        Matrix: A matriz coluna X com a solução do sistema.
+        """
         reduced_a = self.gauss(a)
         
         cols_a = matrix_to_columns(reduced_a)
