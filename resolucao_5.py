@@ -7,14 +7,45 @@ linear_algebra = LinearAlgebra()
 
 A = Matrix(4, 4, [0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0])
 
-h = list(map(lambda l: sum(l), matrix_to_lines(A)))
+A_t = linear_algebra.transpose(A)
 
-a = list(map(lambda c: sum(c), matrix_to_columns(A)))
-
-
+a = Matrix(4, 1, list(map(lambda c: sum(c), matrix_to_columns(A))))
 
 
+# iteracao 1
+aux = linear_algebra.dot(linear_algebra.dot(A_t, A), a)
 
+norma = (sum(map(lambda x: x ** 2, aux.elements))) ** (1/2)
+
+a_1 = linear_algebra.times(aux, Matrix(4, 1, [1/norma, 1/norma, 1/norma, 1/norma]))
+
+
+# iteracao 2
+aux = linear_algebra.dot(linear_algebra.dot(A_t, A), a_1)
+
+norma = (sum(map(lambda x: x ** 2, aux.elements))) ** (1/2)
+
+a_2 = linear_algebra.times(aux, Matrix(4, 1, [1/norma, 1/norma, 1/norma, 1/norma]))
+
+
+# calculo do erro
+diff_a_a_menos_1 = max(linear_algebra.sum(a_2, Matrix(4, 1, list(map(lambda x: x * -1, a_1.elements)))).elements)
+
+a_k_menos_1 = a_2
+
+# loop
+while (diff_a_a_menos_1 >= 0.00001):
+    aux = linear_algebra.dot(linear_algebra.dot(A_t, A), a_k_menos_1)
+
+    norma = (sum(map(lambda x: x ** 2, aux.elements))) ** (1/2)
+
+    a_k = linear_algebra.times(aux, Matrix(4,1, [1/norma, 1/norma, 1/norma, 1/norma]))
+    
+    diff_a_a_menos_1 = max(linear_algebra.sum(a_k, Matrix(4, 1, list(map(lambda x: x * -1, a_k_menos_1.elements)))).elements)
+
+    a_k_menos_1 = a_k
+
+print(a_k)
 
 # print("Transposta matriz quadrada ", end='')
 # matriz_esperada = Matrix(3,3,[11, 21, 31, 12, 22, 32, 13, 23, 33])
