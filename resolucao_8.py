@@ -61,4 +61,6 @@ if i == 1000:
 
 else:
     print("Resultado: ")
-    print(a_k)
+
+    for element in [f"site {i + 1} - {e:.5f}" for i, e in sorted([(i, e) for i, e in enumerate(a_k.elements)], key=lambda x: -x[1])]:
+        print(element)
